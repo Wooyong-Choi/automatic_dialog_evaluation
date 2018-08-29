@@ -1,3 +1,4 @@
-from model.Vocab import Vocab
-from model.Dataset import Dataset
-from model.utils import collate_fn
+from model.vocab import Vocab
+from model.dataset import Dataset
+from model.encoder import EncoderRNN
+from model.utils import *
