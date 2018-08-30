@@ -1,4 +1,5 @@
 import torch
+import torch.nn as nn
 
 from onmt.modules import Embeddings
 from onmt.encoders import RNNEncoder
@@ -10,6 +11,24 @@ def collate_fn(batch):
     """
     return list(zip(*batch))
 
+
+def pad_batch(indices, lengths, device):
+    """
+    Pad inputs of a model.
+    
+    Return:
+        Padded batch data (Decreasing order sorted)
+        Sorted batch length
+        Sorted indices (for recovering original order)
+    """
+    length_batch = torch.tensor(lengths, dtype=torch.long, device=device)
+    sorted_length, sorted_indices = torch.sort(length_batch, descending=True)
+    
+    padded_batch = nn.utils.rnn.pad_sequence(
+        [torch.tensor(indices[idx], dtype=torch.long, device=device) for idx in sorted_indices]
+    )
+    padded_batch = padded_batch.unsqueeze(2)
+    return padded_batch, sorted_length, sorted_indices
 
 
 def load_fields_from_vocab(pre_vocab_path):    
@@ -87,6 +106,8 @@ def build_pretrained_model(model_path, vocab):
     num_layers = int((len(encoder_weight_dict)-1) / 2 / 2 / num_direction)
     input_size, embed_size = encoder_weight_dict[embed_example_key].size()
     rnn_size = encoder_weight_dict[rnn_example_key].size(1) * num_direction
+    
+    print(num_layers)
     
     # Check whether a proper pair of vocab dict and pretrained embedding layer
     assert vocab.n_words == input_size
