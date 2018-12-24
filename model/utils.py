@@ -116,12 +116,7 @@ def build_pretrained_model(model_path, vocab):
     # Build a model
     embeddings = build_embeddings(vocab, embed_size)
     encoder = build_encoder(num_layers, rnn_size, embeddings=embeddings, bidirectional=bidirectional)
-<<<<<<< HEAD
     #print(encoder, '\n')
-=======
-    encoder.load_state_dict(encoder_weight_dict)
-    print(encoder, '\n')
->>>>>>> refs/remotes/origin/master
     
     return encoder  
 
