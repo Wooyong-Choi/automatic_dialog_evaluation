@@ -18,6 +18,14 @@ class UnrefScorer(nn.Module):
 
         self.src_lstm  = nn.LSTM(dim, nhidden, nlayer, bidirectional=True)
         self.tar_lstm  = nn.LSTM(dim, nhidden, nlayer, bidirectional=True)
+<<<<<<< HEAD
+
+        self.mlp = nn.Sequential(nn.Linear(nhidden*8, nhidden*4), nn.Tanh(), 
+                                 nn.Linear(nhidden*4, nhidden*2), nn.Tanh(),
+                                 nn.Linear(nhidden*2, nhidden*1), nn.Tanh(),
+                                 nn.Linear(nhidden,1), nn.Sigmoid())
+=======
+>>>>>>> refs/remotes/origin/master
         
     def forward(self, src, src_len, tar, tar_len):
 
@@ -26,6 +34,10 @@ class UnrefScorer(nn.Module):
 
         padded_src_batch, src_batch_len, src_sorted_indices = pad_batch(src, src_len, self.device)
         padded_tar_batch, tar_batch_len, tar_sorted_indices = pad_batch(tar, tar_len, self.device)
+<<<<<<< HEAD
+
+=======
+>>>>>>> refs/remotes/origin/master
         padded_src_batch = padded_src_batch.squeeze(-1)
         padded_tar_batch = padded_tar_batch.squeeze(-1) 
 
@@ -41,8 +53,13 @@ class UnrefScorer(nn.Module):
         output_src, (src_h, src_c) = self.src_lstm(packed_src, (h0, c0))
         output_tar, (tar_h, tar_c) = self.tar_lstm(packed_tar, (h0, c0))
         
+<<<<<<< HEAD
+        src_h, src_h_len = pad_packed_sequence(output_src)
+        tar_h, tar_h_len = pad_packed_sequence(output_tar)
+=======
         src_h, src_h_len = pad_packed_sequence(src_h)
         tar_h, tar_h_len = pad_packed_sequence(tar_h)
+>>>>>>> refs/remotes/origin/master
         #print('before', src_h.size())
         src_h = torch.cat((src_h[0,:,:], src_h[-1,:,:]), 1)
         tar_h = torch.cat((tar_h[0,:,:], tar_h[-1,:,:]), 1)
@@ -52,6 +69,12 @@ class UnrefScorer(nn.Module):
         #print('cat', cat_h.size())
         #torch.stack([src_h[idx] for idx in src_original_indices])
         #torch.stack([tar_h[idx] for idx in tar_original_indices])
+<<<<<<< HEAD
+        output = self.mlp(cat_h)
+
+        return output
+=======
 
         return cat_h
+>>>>>>> refs/remotes/origin/master
 

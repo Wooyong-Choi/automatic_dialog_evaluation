@@ -2,11 +2,8 @@ import re
 import sys
 import random
 from operator import itemgetter
-
 from torch.utils.data import Dataset
-
 from model.vocab import Vocab
-
 
 class Dataset(Dataset):
     """
@@ -21,6 +18,14 @@ class Dataset(Dataset):
             self.vocab_path = vocab_path
             self.data_path_list = data_path_list
         
+<<<<<<< HEAD
+        self.vocab_path = vocab_path
+        self.data_path_list = data_path_list    
+        self.max_length = max_length
+        self.data = None
+        self.vocab = Vocab(self.vocab_path)
+        self._prepareData()
+=======
             self.max_length = max_length
         
             self.data = None
@@ -31,6 +36,7 @@ class Dataset(Dataset):
             self.data = negative
             self.vocab= dataset_obj.vocab
             self.max_length = dataset_obj.max_length
+>>>>>>> refs/remotes/origin/master
         
     def __getitem__(self, index):
         item_list = []
@@ -79,6 +85,8 @@ class Dataset(Dataset):
     def _chkMaxLength(self, p):
         return len(p[0]) <= self.max_length and len(p[1]) <= self.max_length and len(p[0]) > 0 and len(p[1]) > 0
 
+<<<<<<< HEAD
+=======
     def getNegative(self):
         data = list(zip(*self.data))
         target = list(data[1])
@@ -88,8 +96,13 @@ class Dataset(Dataset):
         return negative
         
 
+>>>>>>> refs/remotes/origin/master
     def getInstanceSize(self):
         return len(self.data)
 
     def getVocabSize(self):
         return self.vocab.__len__()
+<<<<<<< HEAD
+
+=======
+>>>>>>> refs/remotes/origin/master

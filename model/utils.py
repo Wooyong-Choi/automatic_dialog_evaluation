@@ -1,14 +1,15 @@
+import random
 import torch
 import torch.nn as nn
-
+from torch.utils.data import Dataset
 from onmt.modules import Embeddings
 from onmt.encoders import RNNEncoder
-
 
 def collate_fn(batch):
     """
     Collate function for DataLoader class in Pytorch
     """
+    #print ('collate', batch)
     return list(zip(*batch))
 
 
@@ -115,8 +116,36 @@ def build_pretrained_model(model_path, vocab):
     # Build a model
     embeddings = build_embeddings(vocab, embed_size)
     encoder = build_encoder(num_layers, rnn_size, embeddings=embeddings, bidirectional=bidirectional)
+<<<<<<< HEAD
+    #print(encoder, '\n')
+=======
     encoder.load_state_dict(encoder_weight_dict)
     print(encoder, '\n')
+>>>>>>> refs/remotes/origin/master
     
     return encoder  
-    
+
+class NegativeDataset(Dataset):
+    def __init__(self, dataset, vocab):
+        super(Dataset, self).__init__()
+
+        print('[*] generate negative sampels')
+        negative = list(zip(*dataset))
+        target = list(negative[1])
+        random.shuffle(target)
+        negative_dataset = [list(negative[0]), target]
+        self.data = list(zip(*negative_dataset))
+        self.vocab = vocab
+        print('Negative sample size: ', len(self.data))
+        print('Negative example: ', self.data[0])
+        print()
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, index):
+        item_list = []
+        for item in self.data[index]:
+            item_list.append(self.vocab.sentence_to_indices(item))
+            item_list.append(len(item))
+        return item_list
