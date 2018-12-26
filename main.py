@@ -20,12 +20,15 @@ parser.add_argument('-data',   default = './dataset/',    help = 'data folder pa
 parser.add_argument('-pretrain',default= './sample_onmt/',help = 'pretrain model path')
 parser.add_argument('-output', default = './result/model',help = 'output path')
 
+parser.add_argument('-unref',  default = './result/model',help = 'unrefer model path')
+
+
 args = parser.parse_args()
 
 if args.train == 'true':
     train(args)
 
-if args.test is 'true':
+if args.test == 'true':
     test(args)
 
 print('[*] OVER')
